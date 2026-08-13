@@ -1,0 +1,1045 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CryptoLab</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#EEF2F8;
+    --surface:#FFFFFF;
+    --navy:#122347;
+    --navy-2:#1B3A6B;
+    --crimson:#9E1B4D;
+    --crimson-soft:#F5E4EC;
+    --slate:#2B3648;
+    --muted:#67748C;
+    --line:#DCE3EE;
+    --success:#15803D;
+    --success-soft:#E6F4EA;
+    --danger:#B3261E;
+    --danger-soft:#FBEAEA;
+    --mono-bg:#0B1220;
+    --mono-line:#1B2A44;
+    --mono-text:#C9D6EE;
+    --mono-accent:#5FD0C7;
+    --radius:14px;
+    --shadow:0 1px 2px rgba(18,35,71,.04), 0 8px 24px -12px rgba(18,35,71,.14);
+    font-family:'Inter',system-ui,-apple-system,sans-serif;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:
+      radial-gradient(1100px 480px at 85% -8%, #E4ECFB 0%, transparent 60%),
+      var(--bg);
+    color:var(--slate);
+    min-height:100vh;
+  }
+  a{color:inherit;}
+
+  /* ===== Header ===== */
+  header.site{
+    background:var(--navy);
+    background-image:linear-gradient(135deg, var(--navy) 0%, var(--navy-2) 100%);
+    color:#fff;
+    padding:18px clamp(18px,4vw,48px);
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:20px;
+    flex-wrap:wrap;
+    border-bottom:3px solid var(--crimson);
+  }
+  .brand{display:flex;align-items:center;gap:16px;}
+  .brand-text .eyebrow{
+    font-family:'JetBrains Mono',monospace;
+    font-size:11px;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:#9FB3DC;
+    margin:0 0 2px;
+  }
+  .brand-text h1{
+    font-family:'Space Grotesk',sans-serif;
+    font-size:20px;
+    margin:0;
+    font-weight:700;
+    letter-spacing:.01em;
+  }
+
+  /* ===== Hero ===== */
+  .hero{
+    max-width:1180px;
+    margin:0 auto;
+    padding:40px clamp(18px,4vw,48px) 8px;
+  }
+  .hero .kicker{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    font-family:'JetBrains Mono',monospace;
+    font-size:12px;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    color:var(--crimson);
+    background:var(--crimson-soft);
+    padding:5px 12px;
+    border-radius:999px;
+    margin-bottom:16px;
+  }
+  .hero .kicker .dot{width:6px;height:6px;border-radius:50%;background:var(--crimson);}
+  .hero h2{
+    font-family:'Space Grotesk',sans-serif;
+    font-size:clamp(28px,4vw,38px);
+    line-height:1.15;
+    margin:0 0 12px;
+    color:var(--navy);
+    max-width:20ch;
+  }
+  .hero p{
+    font-size:15.5px;
+    color:var(--muted);
+    max-width:62ch;
+    margin:0;
+    line-height:1.6;
+  }
+
+  /* ===== Layout ===== */
+  .layout{
+    max-width:1180px;
+    margin:0 auto;
+    padding:28px clamp(18px,4vw,48px) 64px;
+    display:grid;
+    grid-template-columns:220px 1fr;
+    gap:24px;
+    align-items:start;
+  }
+  @media (max-width:860px){
+    .layout{grid-template-columns:1fr;}
+  }
+
+  /* ===== Tab nav ===== */
+  .tabnav{
+    display:flex;
+    flex-direction:column;
+    gap:6px;
+    position:sticky;
+    top:20px;
+  }
+  .tabnav button{
+    all:unset;
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    gap:10px;
+    padding:12px 14px;
+    border-radius:10px;
+    font-family:'Space Grotesk',sans-serif;
+    font-weight:600;
+    font-size:14px;
+    color:var(--slate);
+    border:1px solid transparent;
+    transition:background .15s ease, color .15s ease, border-color .15s ease;
+  }
+  .tabnav button .ico{
+    width:8px;height:8px;border-radius:2px;
+    background:var(--line);
+    transition:background .15s ease;
+    flex-shrink:0;
+  }
+  .tabnav button:hover{background:var(--surface);border-color:var(--line);}
+  .tabnav button:focus-visible{outline:2px solid var(--navy-2);outline-offset:2px;}
+  .tabnav button.active{
+    background:var(--surface);
+    border-color:var(--navy-2);
+    color:var(--navy);
+    box-shadow:var(--shadow);
+  }
+  .tabnav button.active .ico{background:var(--crimson);}
+  .tabnav .label-small{
+    font-family:'JetBrains Mono',monospace;
+    font-size:10.5px;
+    letter-spacing:.1em;
+    text-transform:uppercase;
+    color:var(--muted);
+    margin:4px 0 2px 14px;
+  }
+
+  /* ===== Panels ===== */
+  .panel{
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    box-shadow:var(--shadow);
+    padding:clamp(18px,3vw,30px);
+    display:none;
+  }
+  .panel.active{display:block;animation:fadeIn .25s ease;}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(4px);}to{opacity:1;transform:translateY(0);}}
+
+  .panel-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:4px;}
+  .panel-head h3{
+    font-family:'Space Grotesk',sans-serif;
+    font-size:20px;
+    margin:0;
+    color:var(--navy);
+  }
+  .panel-head .tag{
+    font-family:'JetBrains Mono',monospace;
+    font-size:11px;
+    color:var(--muted);
+    background:var(--bg);
+    border:1px solid var(--line);
+    padding:3px 9px;
+    border-radius:999px;
+  }
+  .panel-desc{color:var(--muted);font-size:13.5px;margin:6px 0 22px;line-height:1.55;max-width:60ch;}
+
+  .field{margin-bottom:16px;}
+  .field label{
+    display:block;
+    font-family:'Space Grotesk',sans-serif;
+    font-weight:600;
+    font-size:12.5px;
+    color:var(--slate);
+    margin-bottom:6px;
+  }
+  .field .hint{font-weight:400;color:var(--muted);font-size:11.5px;}
+  textarea, input[type="text"], input[type="password"], input[type="number"]{
+    width:100%;
+    font-family:'JetBrains Mono',monospace;
+    font-size:13.5px;
+    padding:11px 13px;
+    border:1px solid var(--line);
+    border-radius:9px;
+    background:#FBFCFE;
+    color:var(--slate);
+    resize:vertical;
+    transition:border-color .15s ease, box-shadow .15s ease;
+  }
+  textarea{min-height:96px;line-height:1.5;}
+  textarea:focus, input:focus{
+    outline:none;
+    border-color:var(--navy-2);
+    box-shadow:0 0 0 3px rgba(27,58,107,.12);
+  }
+  .row{display:flex;gap:14px;flex-wrap:wrap;}
+  .row > .field{flex:1;min-width:160px;}
+
+  .btn-row{display:flex;gap:10px;flex-wrap:wrap;margin:18px 0 22px;}
+  button.action{
+    all:unset;
+    cursor:pointer;
+    font-family:'Space Grotesk',sans-serif;
+    font-weight:600;
+    font-size:13.5px;
+    padding:10px 18px;
+    border-radius:9px;
+    transition:transform .1s ease, opacity .15s ease, background .15s ease;
+    display:inline-flex;align-items:center;gap:7px;
+  }
+  button.action:active{transform:scale(.97);}
+  button.action:focus-visible{outline:2px solid var(--navy-2);outline-offset:2px;}
+  button.primary{background:var(--navy-2);color:#fff;}
+  button.primary:hover{background:var(--navy);}
+  button.secondary{background:var(--crimson-soft);color:var(--crimson);}
+  button.secondary:hover{background:#EFCADA;}
+  button.ghost{background:var(--bg);color:var(--slate);border:1px solid var(--line) !important;}
+  button.ghost:hover{background:#E4E9F2;}
+
+  .output-block{margin-top:4px;}
+  .output-block label{
+    display:block;
+    font-family:'Space Grotesk',sans-serif;
+    font-weight:600;
+    font-size:12.5px;
+    margin-bottom:6px;
+  }
+  .mono-panel{
+    background:var(--mono-bg);
+    border-radius:10px;
+    padding:14px 16px;
+    font-family:'JetBrains Mono',monospace;
+    font-size:13px;
+    color:var(--mono-text);
+    min-height:52px;
+    word-break:break-all;
+    line-height:1.6;
+    border:1px solid var(--mono-line);
+    position:relative;
+  }
+  .mono-panel.empty::before{
+    content:attr(data-placeholder);
+    color:#4C5C7D;
+  }
+  .mono-panel .copy-btn{
+    position:absolute;top:8px;right:8px;
+    all:unset;cursor:pointer;
+    font-family:'JetBrains Mono',monospace;
+    font-size:10.5px;
+    color:var(--mono-accent);
+    background:rgba(95,208,199,.1);
+    padding:4px 9px;
+    border-radius:6px;
+    letter-spacing:.04em;
+  }
+  .mono-panel .copy-btn:hover{background:rgba(95,208,199,.2);}
+
+  .status-line{
+    display:flex;align-items:center;gap:8px;
+    font-family:'JetBrains Mono',monospace;
+    font-size:12px;
+    margin-top:10px;
+    min-height:16px;
+  }
+  .status-line .dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+  .status-line.ok{color:var(--success);}
+  .status-line.ok .dot{background:var(--success);}
+  .status-line.err{color:var(--danger);}
+  .status-line.err .dot{background:var(--danger);}
+
+  .hash-grid{display:flex;flex-direction:column;gap:16px;margin-top:6px;}
+  .key-display{max-height:110px;overflow-y:auto;font-size:11.5px;line-height:1.55;}
+  .hash-row-label{
+    font-family:'Space Grotesk',sans-serif;
+    font-weight:600;
+    font-size:13px;
+    color:var(--slate);
+    margin-bottom:6px;
+    display:flex;align-items:center;gap:8px;flex-wrap:wrap;
+  }
+  .hash-bits{
+    font-family:'JetBrains Mono',monospace;
+    font-weight:400;
+    font-size:10.5px;
+    color:var(--muted);
+  }
+  .hash-flag{
+    font-family:'JetBrains Mono',monospace;
+    font-weight:500;
+    font-size:10px;
+    letter-spacing:.03em;
+    padding:2px 8px;
+    border-radius:999px;
+  }
+  .hash-flag.weak{background:var(--danger-soft);color:var(--danger);}
+  .hash-flag.ok{background:var(--success-soft);color:var(--success);}
+  select{
+    width:100%;
+    font-family:'JetBrains Mono',monospace;
+    font-size:13.5px;
+    padding:11px 13px;
+    border:1px solid var(--line);
+    border-radius:9px;
+    background:#FBFCFE;
+    color:var(--slate);
+  }
+  select:focus{outline:none;border-color:var(--navy-2);box-shadow:0 0 0 3px rgba(27,58,107,.12);}
+
+  .info-strip{
+    display:flex;gap:10px;align-items:flex-start;
+    background:var(--bg);
+    border:1px solid var(--line);
+    border-radius:10px;
+    padding:12px 14px;
+    margin-top:22px;
+    font-size:12.5px;
+    color:var(--muted);
+    line-height:1.55;
+  }
+  .info-strip b{color:var(--slate);}
+
+  /* ===== Activity log (signature element) ===== */
+  .log-section{
+    max-width:1180px;
+    margin:0 auto;
+    padding:0 clamp(18px,4vw,48px) 70px;
+  }
+  .log-card{
+    background:var(--mono-bg);
+    border-radius:var(--radius);
+    padding:20px clamp(16px,3vw,26px);
+    box-shadow:var(--shadow);
+  }
+  .log-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px;flex-wrap:wrap;}
+  .log-head h4{
+    font-family:'Space Grotesk',sans-serif;
+    color:#fff;
+    font-size:14.5px;
+    margin:0;
+    display:flex;align-items:center;gap:9px;
+  }
+  .log-head h4 .pulse{
+    width:8px;height:8px;border-radius:50%;
+    background:var(--mono-accent);
+    box-shadow:0 0 0 0 rgba(95,208,199,.6);
+    animation:pulse 2s infinite;
+  }
+  @keyframes pulse{
+    0%{box-shadow:0 0 0 0 rgba(95,208,199,.55);}
+    70%{box-shadow:0 0 0 7px rgba(95,208,199,0);}
+    100%{box-shadow:0 0 0 0 rgba(95,208,199,0);}
+  }
+  .log-head .clear{
+    all:unset;cursor:pointer;
+    font-family:'JetBrains Mono',monospace;
+    font-size:11px;
+    color:#7C8CAE;
+    padding:4px 10px;
+    border-radius:6px;
+  }
+  .log-head .clear:hover{background:rgba(255,255,255,.06);color:#C9D6EE;}
+  .log-list{
+    display:flex;flex-direction:column;
+    gap:0;
+    font-family:'JetBrains Mono',monospace;
+    font-size:12px;
+    max-height:220px;
+    overflow-y:auto;
+  }
+  .log-row{
+    display:grid;
+    grid-template-columns:76px 92px 1fr 70px;
+    gap:12px;
+    padding:8px 4px;
+    border-bottom:1px solid var(--mono-line);
+    color:var(--mono-text);
+    align-items:center;
+  }
+  @media (max-width:640px){
+    .log-row{grid-template-columns:1fr;gap:2px;padding:10px 4px;}
+    .log-row .lt{display:none;}
+  }
+  .log-row:last-child{border-bottom:none;}
+  .log-row .time{color:#5A6B8C;}
+  .log-row .op{color:var(--mono-accent);font-weight:600;}
+  .log-row .detail{color:#9FB0D0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .log-row .res{text-align:right;font-weight:600;}
+  .log-row .res.ok{color:var(--success);}
+  .log-row .res.err{color:#F09090;}
+  .log-empty{color:#4C5C7D;font-family:'JetBrains Mono',monospace;font-size:12.5px;padding:10px 4px;}
+
+  footer.site{
+    text-align:center;
+    padding:22px 18px 40px;
+    font-size:12px;
+    color:var(--muted);
+    font-family:'JetBrains Mono',monospace;
+  }
+  /* ===== Mobile overrides (kept last so they win the cascade) ===== */
+  @media (max-width:860px){
+    .tabnav{
+      position:static;
+      flex-direction:column;
+    }
+  }
+</style>
+</head>
+<body>
+
+<header class="site">
+  <div class="brand">
+    <div class="brand-text">
+      <h1>CryptoLab</h1>
+    </div>
+  </div>
+</header>
+
+<section class="hero">
+  <h2>Four ciphers, five hash algorithms, zero servers.</h2>
+  <p>An in-browser toolkit demonstrating classical, symmetric, and asymmetric encryption alongside cryptographic hashing. Every operation below runs entirely client-side in JavaScript — nothing is sent anywhere.</p>
+</section>
+
+<div class="layout">
+  <nav class="tabnav" id="tabnav">
+    <span class="label-small">Symmetric</span>
+    <button class="tab-btn active" data-tab="caesar"><span class="ico"></span>Caesar Cipher</button>
+    <button class="tab-btn" data-tab="vigenere"><span class="ico"></span>Vigenère Cipher</button>
+    <button class="tab-btn" data-tab="aes"><span class="ico"></span>AES-256 (GCM)</button>
+    <span class="label-small">Asymmetric</span>
+    <button class="tab-btn" data-tab="rsa"><span class="ico"></span>RSA-OAEP</button>
+    <span class="label-small">Integrity</span>
+    <button class="tab-btn" data-tab="hash"><span class="ico"></span>Hashing</button>
+  </nav>
+
+  <div class="panels">
+
+    <!-- CAESAR -->
+    <section class="panel active" id="panel-caesar">
+      <div class="panel-head"><h3>Caesar Cipher</h3><span class="tag">substitution · symmetric</span></div>
+      <p class="panel-desc">Shifts every letter forward by a fixed number of places in the alphabet. Case is preserved and non-letter characters pass through unchanged.</p>
+
+      <div class="row">
+        <div class="field" style="flex:2;">
+          <label>Message</label>
+          <textarea id="caesar-input" placeholder="Type text to encrypt or decrypt…"></textarea>
+        </div>
+        <div class="field">
+          <label>Shift <span class="hint">(0–25)</span></label>
+          <input type="number" id="caesar-shift" value="3" min="0" max="25">
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <button class="action primary" onclick="runCaesar('encrypt')">Encrypt</button>
+        <button class="action secondary" onclick="runCaesar('decrypt')">Decrypt</button>
+        <button class="action ghost" onclick="clearPanel('caesar')">Clear</button>
+      </div>
+
+      <div class="output-block">
+        <label>Result</label>
+        <div class="mono-panel empty" id="caesar-output" data-placeholder="// output will appear here">
+          <button class="copy-btn" onclick="copyOutput('caesar-output')">COPY</button>
+        </div>
+        <div class="status-line" id="caesar-status"></div>
+      </div>
+    </section>
+
+    <!-- VIGENERE -->
+    <section class="panel" id="panel-vigenere">
+      <div class="panel-head"><h3>Vigenère Cipher</h3><span class="tag">polyalphabetic · symmetric</span></div>
+      <p class="panel-desc">Uses a repeating keyword to apply a different shift to each letter, making frequency analysis far harder than a Caesar cipher.</p>
+
+      <div class="row">
+        <div class="field" style="flex:2;">
+          <label>Message</label>
+          <textarea id="vig-input" placeholder="Type text to encrypt or decrypt…"></textarea>
+        </div>
+        <div class="field">
+          <label>Keyword <span class="hint">(letters only)</span></label>
+          <input type="text" id="vig-key" placeholder="e.g. amrita">
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <button class="action primary" onclick="runVigenere('encrypt')">Encrypt</button>
+        <button class="action secondary" onclick="runVigenere('decrypt')">Decrypt</button>
+        <button class="action ghost" onclick="clearPanel('vig')">Clear</button>
+      </div>
+
+      <div class="output-block">
+        <label>Result</label>
+        <div class="mono-panel empty" id="vig-output" data-placeholder="// output will appear here">
+          <button class="copy-btn" onclick="copyOutput('vig-output')">COPY</button>
+        </div>
+        <div class="status-line" id="vig-status"></div>
+      </div>
+    </section>
+
+    <!-- AES -->
+    <section class="panel" id="panel-aes">
+      <div class="panel-head"><h3>AES-256 (GCM)</h3><span class="tag">Web Crypto API · symmetric</span></div>
+      <p class="panel-desc">Industry-standard authenticated encryption. Your passphrase is stretched into a 256-bit key with PBKDF2, and a random salt + IV are generated per encryption so the same input never produces the same ciphertext twice.</p>
+
+      <div class="row">
+        <div class="field" style="flex:2;">
+          <label>Message</label>
+          <textarea id="aes-input" placeholder="Plaintext to encrypt, or Base64 ciphertext to decrypt…"></textarea>
+        </div>
+        <div class="field">
+          <label>Passphrase</label>
+          <input type="password" id="aes-key" placeholder="Enter a passphrase">
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <button class="action primary" onclick="runAES('encrypt')">Encrypt</button>
+        <button class="action secondary" onclick="runAES('decrypt')">Decrypt</button>
+        <button class="action ghost" onclick="clearPanel('aes')">Clear</button>
+      </div>
+
+      <div class="output-block">
+        <label>Result</label>
+        <div class="mono-panel empty" id="aes-output" data-placeholder="// output will appear here">
+          <button class="copy-btn" onclick="copyOutput('aes-output')">COPY</button>
+        </div>
+        <div class="status-line" id="aes-status"></div>
+      </div>
+
+      <div class="info-strip">
+        <span>ⓘ</span>
+        <span><b>How it works:</b> PBKDF2 (100,000 iterations, SHA-256) derives the key from your passphrase and a random salt. AES-GCM then encrypts with a random 12-byte IV. Salt + IV + ciphertext are packed together and Base64-encoded, so decryption only needs the same passphrase.</span>
+      </div>
+    </section>
+
+    <!-- RSA -->
+    <section class="panel" id="panel-rsa">
+      <div class="panel-head"><h3>RSA-OAEP</h3><span class="tag">Web Crypto API · asymmetric</span></div>
+      <p class="panel-desc">Uses a mathematically linked key <i>pair</i> instead of one shared secret: anyone can encrypt with your public key, but only your private key can decrypt it. This is what makes secure communication possible between people who've never met — the basis of HTTPS, PGP, and SSH.</p>
+
+      <div class="btn-row">
+        <button class="action primary" onclick="generateRSAKeys()">Generate 2048-bit Key Pair</button>
+      </div>
+
+      <div class="field">
+        <label>Public key <span class="hint">(share freely — used to encrypt)</span></label>
+        <div class="mono-panel empty key-display" id="rsa-pubkey" data-placeholder="// click 'Generate Key Pair' above">
+          <button class="copy-btn" onclick="copyOutput('rsa-pubkey')">COPY</button>
+        </div>
+      </div>
+      <div class="field">
+        <label>Private key <span class="hint">(keep secret — used to decrypt)</span></label>
+        <div class="mono-panel empty key-display" id="rsa-privkey" data-placeholder="// click 'Generate Key Pair' above">
+          <button class="copy-btn" onclick="copyOutput('rsa-privkey')">COPY</button>
+        </div>
+      </div>
+
+      <div class="field" style="margin-top:22px;">
+        <label>Message <span class="hint">(max ~190 bytes with 2048-bit RSA-OAEP/SHA-256)</span></label>
+        <textarea id="rsa-input" placeholder="Type a short message to encrypt, or paste Base64 ciphertext to decrypt…"></textarea>
+      </div>
+
+      <div class="btn-row">
+        <button class="action primary" onclick="runRSA('encrypt')">Encrypt with Public Key</button>
+        <button class="action secondary" onclick="runRSA('decrypt')">Decrypt with Private Key</button>
+        <button class="action ghost" onclick="clearPanel('rsa')">Clear message</button>
+      </div>
+
+      <div class="output-block">
+        <label>Result</label>
+        <div class="mono-panel empty" id="rsa-output" data-placeholder="// output will appear here">
+          <button class="copy-btn" onclick="copyOutput('rsa-output')">COPY</button>
+        </div>
+        <div class="status-line" id="rsa-status"></div>
+      </div>
+
+      <div class="info-strip">
+        <span>ⓘ</span>
+        <span><b>How it works:</b> RSA-OAEP pads the message with randomness before the RSA transform, which prevents the classic attacks plain textbook RSA is vulnerable to. Because RSA is slow and can only encrypt small messages, real systems (like TLS) actually use RSA only to exchange a short AES key, then switch to AES for the bulk data — the best of both algorithms.</span>
+      </div>
+    </section>
+
+    <!-- HASH -->
+    <section class="panel" id="panel-hash">
+      <div class="panel-head"><h3>Hashing</h3><span class="tag">Web Crypto API + MD5 · one-way</span></div>
+      <p class="panel-desc">Produces a fixed-length fingerprint of any input. Unlike encryption, hashing is one-way — there is no "decrypt". This is one way hashing supports the <b>integrity</b> part of the CIA triad: if a file changes even slightly, its hash changes completely, so comparing hashes reveals tampering. One input, five algorithms, computed side by side.</p>
+
+      <div class="field">
+        <label>Input</label>
+        <textarea id="hash-input" placeholder="Type or paste text to hash…"></textarea>
+      </div>
+
+      <div class="btn-row">
+        <button class="action primary" onclick="runHash()">Generate All Digests</button>
+        <button class="action ghost" onclick="clearPanel('hash')">Clear</button>
+      </div>
+
+      <div class="hash-grid" id="hash-grid">
+        <div class="hash-row" data-algo="MD5">
+          <div class="hash-row-label">MD5 <span class="hash-bits">128-bit</span> <span class="hash-flag weak">not recommended today</span></div>
+          <div class="mono-panel empty" id="hash-output-md5" data-placeholder="// digest will appear here"><button class="copy-btn" onclick="copyOutput('hash-output-md5')">COPY</button></div>
+        </div>
+        <div class="hash-row" data-algo="SHA-1">
+          <div class="hash-row-label">SHA-1 <span class="hash-bits">160-bit</span> <span class="hash-flag weak">being phased out</span></div>
+          <div class="mono-panel empty" id="hash-output-sha1" data-placeholder="// digest will appear here"><button class="copy-btn" onclick="copyOutput('hash-output-sha1')">COPY</button></div>
+        </div>
+        <div class="hash-row" data-algo="SHA-256">
+          <div class="hash-row-label">SHA-256 <span class="hash-bits">256-bit</span> <span class="hash-flag ok">current standard</span></div>
+          <div class="mono-panel empty" id="hash-output-sha256" data-placeholder="// digest will appear here"><button class="copy-btn" onclick="copyOutput('hash-output-sha256')">COPY</button></div>
+        </div>
+        <div class="hash-row" data-algo="SHA-384">
+          <div class="hash-row-label">SHA-384 <span class="hash-bits">384-bit</span> <span class="hash-flag ok">high-security variant</span></div>
+          <div class="mono-panel empty" id="hash-output-sha384" data-placeholder="// digest will appear here"><button class="copy-btn" onclick="copyOutput('hash-output-sha384')">COPY</button></div>
+        </div>
+        <div class="hash-row" data-algo="SHA-512">
+          <div class="hash-row-label">SHA-512 <span class="hash-bits">512-bit</span> <span class="hash-flag ok">high-security variant</span></div>
+          <div class="mono-panel empty" id="hash-output-sha512" data-placeholder="// digest will appear here"><button class="copy-btn" onclick="copyOutput('hash-output-sha512')">COPY</button></div>
+        </div>
+      </div>
+
+      <div class="row" style="margin-top:24px;">
+        <div class="field">
+          <label>Verify against <span class="hint">(algorithm)</span></label>
+          <select id="hash-verify-algo">
+            <option value="md5">MD5</option>
+            <option value="sha1">SHA-1</option>
+            <option value="sha256" selected>SHA-256</option>
+            <option value="sha384">SHA-384</option>
+            <option value="sha512">SHA-512</option>
+          </select>
+        </div>
+        <div class="field" style="flex:2;">
+          <label>Digest to compare</label>
+          <input type="text" id="hash-verify" placeholder="Paste a digest to check for a match">
+        </div>
+      </div>
+      <div class="status-line" id="hash-status"></div>
+    </section>
+
+  </div>
+</div>
+
+<section class="log-section">
+  <div class="log-card">
+    <div class="log-head">
+      <h4><span class="pulse"></span>Activity Log</h4>
+      <button class="clear" onclick="clearLog()">clear log</button>
+    </div>
+    <div class="log-list" id="log-list">
+      <div class="log-empty">// no operations run yet — try encrypting something above</div>
+    </div>
+  </div>
+</section>
+
+<footer class="site">
+  CryptoLab · encryption &amp; hashing toolkit
+</footer>
+
+<script>
+/* ========== Tab switching ========== */
+document.querySelectorAll('.tab-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('panel-'+btn.dataset.tab).classList.add('active');
+  });
+});
+
+/* ========== Activity log ========== */
+function logEvent(op, detail, ok){
+  const list = document.getElementById('log-list');
+  const empty = list.querySelector('.log-empty');
+  if(empty) empty.remove();
+
+  const row = document.createElement('div');
+  row.className = 'log-row';
+  const time = new Date().toLocaleTimeString('en-GB',{hour12:false});
+  row.innerHTML = `
+    <span class="time lt">${time}</span>
+    <span class="op">${op}</span>
+    <span class="detail">${detail}</span>
+    <span class="res ${ok?'ok':'err'}">${ok?'SUCCESS':'FAILED'}</span>
+  `;
+  list.prepend(row);
+
+  const rows = list.querySelectorAll('.log-row');
+  if(rows.length > 8) rows[rows.length-1].remove();
+}
+function clearLog(){
+  document.getElementById('log-list').innerHTML = '<div class="log-empty">// no operations run yet — try encrypting something above</div>';
+}
+
+/* ========== Helpers ========== */
+function setOutput(id, text){
+  const el = document.getElementById(id);
+  el.classList.remove('empty');
+  el.innerHTML = escapeHtml(text) + '<button class="copy-btn" onclick="copyOutput(\''+id+'\')">COPY</button>';
+}
+function escapeHtml(str){
+  const d = document.createElement('div');
+  d.innerText = str;
+  return d.innerHTML;
+}
+function setStatus(id, msg, ok){
+  const el = document.getElementById(id);
+  el.className = 'status-line ' + (ok?'ok':'err');
+  el.innerHTML = '<span class="dot"></span>' + msg;
+}
+function copyOutput(id){
+  const el = document.getElementById(id);
+  const text = el.innerText.replace('COPY','').trim();
+  if(!text) return;
+  navigator.clipboard.writeText(text);
+  const btn = el.querySelector('.copy-btn');
+  const old = btn.textContent;
+  btn.textContent = 'COPIED';
+  setTimeout(()=>btn.textContent = old, 1200);
+}
+function clearPanel(prefix){
+  const input = document.getElementById(prefix+'-input');
+  if(input) input.value = '';
+
+  if(prefix === 'hash'){
+    ['md5','sha1','sha256','sha384','sha512'].forEach(a=>{
+      const el = document.getElementById('hash-output-'+a);
+      if(el){ el.classList.add('empty'); el.innerHTML = '<button class="copy-btn" onclick="copyOutput(\'hash-output-'+a+'\')">COPY</button>'; }
+    });
+    document.getElementById('hash-verify').value = '';
+  } else {
+    const output = document.getElementById(prefix+'-output');
+    if(output){
+      output.classList.add('empty');
+      output.innerHTML = '<button class="copy-btn" onclick="copyOutput(\''+prefix+'-output\')">COPY</button>';
+    }
+  }
+  const status = document.getElementById(prefix+'-status');
+  if(status){ status.className='status-line'; status.innerHTML=''; }
+}
+
+/* ========== Caesar Cipher ========== */
+function caesarShift(text, shift){
+  return text.replace(/[a-zA-Z]/g, ch=>{
+    const base = ch === ch.toUpperCase() ? 65 : 97;
+    return String.fromCharCode((ch.charCodeAt(0) - base + shift + 26) % 26 + base);
+  });
+}
+function runCaesar(mode){
+  const text = document.getElementById('caesar-input').value;
+  let shift = parseInt(document.getElementById('caesar-shift').value, 10);
+  if(isNaN(shift)){ setStatus('caesar-status','Enter a valid numeric shift.', false); return; }
+  shift = ((shift % 26) + 26) % 26;
+  if(!text){ setStatus('caesar-status','Enter a message first.', false); return; }
+
+  const result = caesarShift(text, mode === 'encrypt' ? shift : -shift);
+  setOutput('caesar-output', result);
+  setStatus('caesar-status', mode === 'encrypt' ? `Encrypted with shift ${shift}.` : `Decrypted with shift ${shift}.`, true);
+  logEvent('CAESAR', `${mode} · shift ${shift}`, true);
+}
+
+/* ========== Vigenère Cipher ========== */
+function vigenereProcess(text, key, decrypt){
+  const cleanKey = key.replace(/[^a-zA-Z]/g,'');
+  if(!cleanKey) return null;
+  let ki = 0;
+  return text.replace(/[a-zA-Z]/g, ch=>{
+    const base = ch === ch.toUpperCase() ? 65 : 97;
+    const k = cleanKey[ki % cleanKey.length].toLowerCase().charCodeAt(0) - 97;
+    ki++;
+    const shift = decrypt ? -k : k;
+    return String.fromCharCode((ch.charCodeAt(0) - base + shift + 26) % 26 + base);
+  });
+}
+function runVigenere(mode){
+  const text = document.getElementById('vig-input').value;
+  const key = document.getElementById('vig-key').value;
+  if(!text){ setStatus('vig-status','Enter a message first.', false); return; }
+  if(!key.replace(/[^a-zA-Z]/g,'')){ setStatus('vig-status','Enter a letters-only keyword.', false); return; }
+
+  const result = vigenereProcess(text, key, mode === 'decrypt');
+  setOutput('vig-output', result);
+  setStatus('vig-status', mode === 'encrypt' ? `Encrypted with keyword "${key}".` : `Decrypted with keyword "${key}".`, true);
+  logEvent('VIGENÈRE', `${mode} · key "${key}"`, true);
+}
+
+/* ========== AES-256-GCM (Web Crypto API) ========== */
+async function deriveKey(passphrase, salt){
+  const enc = new TextEncoder();
+  const keyMaterial = await crypto.subtle.importKey(
+    'raw', enc.encode(passphrase), 'PBKDF2', false, ['deriveKey']
+  );
+  return crypto.subtle.deriveKey(
+    { name:'PBKDF2', salt, iterations:100000, hash:'SHA-256' },
+    keyMaterial,
+    { name:'AES-GCM', length:256 },
+    false,
+    ['encrypt','decrypt']
+  );
+}
+function bufToB64(buf){
+  return btoa(String.fromCharCode(...new Uint8Array(buf)));
+}
+function b64ToBuf(b64){
+  return Uint8Array.from(atob(b64), c=>c.charCodeAt(0));
+}
+async function runAES(mode){
+  const text = document.getElementById('aes-input').value;
+  const pass = document.getElementById('aes-key').value;
+  if(!text){ setStatus('aes-status','Enter a message first.', false); return; }
+  if(!pass){ setStatus('aes-status','Enter a passphrase.', false); return; }
+
+  try{
+    if(mode === 'encrypt'){
+      const salt = crypto.getRandomValues(new Uint8Array(16));
+      const iv = crypto.getRandomValues(new Uint8Array(12));
+      const key = await deriveKey(pass, salt);
+      const enc = new TextEncoder();
+      const cipherBuf = await crypto.subtle.encrypt({name:'AES-GCM', iv}, key, enc.encode(text));
+      const packed = new Uint8Array(salt.length + iv.length + cipherBuf.byteLength);
+      packed.set(salt, 0);
+      packed.set(iv, salt.length);
+      packed.set(new Uint8Array(cipherBuf), salt.length + iv.length);
+      const result = bufToB64(packed.buffer);
+      setOutput('aes-output', result);
+      setStatus('aes-status','Encrypted with AES-256-GCM.', true);
+      logEvent('AES-GCM', 'encrypt · 256-bit key', true);
+    } else {
+      const packed = b64ToBuf(text.trim());
+      const salt = packed.slice(0,16);
+      const iv = packed.slice(16,28);
+      const cipherBytes = packed.slice(28);
+      const key = await deriveKey(pass, salt);
+      const plainBuf = await crypto.subtle.decrypt({name:'AES-GCM', iv}, key, cipherBytes);
+      const dec = new TextDecoder();
+      setOutput('aes-output', dec.decode(plainBuf));
+      setStatus('aes-status','Decrypted successfully.', true);
+      logEvent('AES-GCM', 'decrypt · 256-bit key', true);
+    }
+  }catch(err){
+    setStatus('aes-status','Decryption failed — wrong passphrase or corrupted ciphertext.', false);
+    logEvent('AES-GCM', mode + ' · failed', false);
+  }
+}
+
+/* ========== RSA-OAEP (Web Crypto API) ========== */
+let rsaKeyPair = null;
+
+function abToB64(buf){
+  return btoa(String.fromCharCode(...new Uint8Array(buf)));
+}
+function b64ToAb(b64){
+  return Uint8Array.from(atob(b64), c=>c.charCodeAt(0)).buffer;
+}
+function wrapPem(b64, label){
+  const lines = b64.match(/.{1,64}/g).join('\n');
+  return `-----BEGIN ${label}-----\n${lines}\n-----END ${label}-----`;
+}
+
+async function generateRSAKeys(){
+  try{
+    rsaKeyPair = await crypto.subtle.generateKey(
+      { name:'RSA-OAEP', modulusLength:2048, publicExponent:new Uint8Array([1,0,1]), hash:'SHA-256' },
+      true,
+      ['encrypt','decrypt']
+    );
+    const pubRaw = await crypto.subtle.exportKey('spki', rsaKeyPair.publicKey);
+    const privRaw = await crypto.subtle.exportKey('pkcs8', rsaKeyPair.privateKey);
+    setOutput('rsa-pubkey', wrapPem(abToB64(pubRaw), 'PUBLIC KEY'));
+    setOutput('rsa-privkey', wrapPem(abToB64(privRaw), 'PRIVATE KEY'));
+    setStatus('rsa-status','New 2048-bit key pair generated.', true);
+    logEvent('RSA-OAEP', 'key pair generated · 2048-bit', true);
+  }catch(err){
+    setStatus('rsa-status','Key generation failed: ' + err.message, false);
+    logEvent('RSA-OAEP', 'key generation · failed', false);
+  }
+}
+
+async function runRSA(mode){
+  const text = document.getElementById('rsa-input').value;
+  if(!rsaKeyPair){ setStatus('rsa-status','Generate a key pair first.', false); return; }
+  if(!text){ setStatus('rsa-status','Enter a message first.', false); return; }
+
+  try{
+    if(mode === 'encrypt'){
+      const enc = new TextEncoder();
+      const data = enc.encode(text);
+      if(data.length > 190){
+        setStatus('rsa-status', `Message too long for RSA-OAEP (${data.length}/190 bytes). Use AES for longer messages.`, false);
+        return;
+      }
+      const cipherBuf = await crypto.subtle.encrypt({name:'RSA-OAEP'}, rsaKeyPair.publicKey, data);
+      setOutput('rsa-output', abToB64(cipherBuf));
+      setStatus('rsa-status','Encrypted with the public key.', true);
+      logEvent('RSA-OAEP', 'encrypt · public key', true);
+    } else {
+      const cipherBuf = b64ToAb(text.trim());
+      const plainBuf = await crypto.subtle.decrypt({name:'RSA-OAEP'}, rsaKeyPair.privateKey, cipherBuf);
+      const dec = new TextDecoder();
+      setOutput('rsa-output', dec.decode(plainBuf));
+      setStatus('rsa-status','Decrypted with the private key.', true);
+      logEvent('RSA-OAEP', 'decrypt · private key', true);
+    }
+  }catch(err){
+    setStatus('rsa-status','Operation failed — check the ciphertext and key pair.', false);
+    logEvent('RSA-OAEP', mode + ' · failed', false);
+  }
+}
+
+/* ========== Hashing: MD5, SHA-1, SHA-256, SHA-384, SHA-512 ========== */
+
+/* Web Crypto covers SHA-1/256/384/512 natively */
+async function webCryptoHex(algo, text){
+  const enc = new TextEncoder();
+  const buf = await crypto.subtle.digest(algo, enc.encode(text));
+  return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
+}
+
+/* MD5 isn't built into the browser's Web Crypto API (only SHA-1/256/384/512 are),
+   so it's implemented here directly from its specification, purely to show its
+   shorter 128-bit digest alongside the other algorithms. */
+function md5(input){
+  function rotl(x,c){ return (x<<c)|(x>>>(32-c)); }
+  function toBytesUTF8(str){ return new TextEncoder().encode(str); }
+
+  const s = [7,12,17,22,7,12,17,22,7,12,17,22,7,12,17,22,
+             5,9,14,20,5,9,14,20,5,9,14,20,5,9,14,20,
+             4,11,16,23,4,11,16,23,4,11,16,23,4,11,16,23,
+             6,10,15,21,6,10,15,21,6,10,15,21,6,10,15,21];
+  const K = new Array(64);
+  for(let i=0;i<64;i++) K[i] = Math.floor(Math.abs(Math.sin(i+1)) * 4294967296) >>> 0;
+
+  const bytes = toBytesUTF8(input);
+  const bitLen = bytes.length * 8;
+  let msg = Array.from(bytes);
+  msg.push(0x80);
+  while(msg.length % 64 !== 56) msg.push(0);
+  for(let i=0;i<8;i++) msg.push((bitLen / Math.pow(2,8*i)) & 0xff);
+
+  let a0=0x67452301, b0=0xefcdab89, c0=0x98badcfe, d0=0x10325476;
+
+  for(let chunkStart=0; chunkStart<msg.length; chunkStart+=64){
+    const M = new Array(16);
+    for(let i=0;i<16;i++){
+      M[i] = msg[chunkStart+i*4] | (msg[chunkStart+i*4+1]<<8) | (msg[chunkStart+i*4+2]<<16) | (msg[chunkStart+i*4+3]<<24);
+    }
+    let A=a0,B=b0,C=c0,D=d0;
+    for(let i=0;i<64;i++){
+      let F,g;
+      if(i<16){ F=(B&C)|(~B&D); g=i; }
+      else if(i<32){ F=(D&B)|(~D&C); g=(5*i+1)%16; }
+      else if(i<48){ F=B^C^D; g=(3*i+5)%16; }
+      else{ F=C^(B|~D); g=(7*i)%16; }
+      F = (F + A + K[i] + M[g]) >>> 0;
+      A = D; D = C; C = B;
+      B = (B + rotl(F, s[i])) >>> 0;
+    }
+    a0 = (a0+A)>>>0; b0=(b0+B)>>>0; c0=(c0+C)>>>0; d0=(d0+D)>>>0;
+  }
+  function toLE(n){
+    let out='';
+    for(let i=0;i<4;i++){ out += ((n>>>(i*8))&0xff).toString(16).padStart(2,'0'); }
+    return out;
+  }
+  return toLE(a0)+toLE(b0)+toLE(c0)+toLE(d0);
+}
+
+async function runHash(){
+  const text = document.getElementById('hash-input').value;
+  if(!text){ return; }
+
+  const results = {
+    md5: md5(text),
+    sha1: await webCryptoHex('SHA-1', text),
+    sha256: await webCryptoHex('SHA-256', text),
+    sha384: await webCryptoHex('SHA-384', text),
+    sha512: await webCryptoHex('SHA-512', text),
+  };
+
+  setOutput('hash-output-md5', results.md5);
+  setOutput('hash-output-sha1', results.sha1);
+  setOutput('hash-output-sha256', results.sha256);
+  setOutput('hash-output-sha384', results.sha384);
+  setOutput('hash-output-sha512', results.sha512);
+
+  logEvent('HASH', `all 5 algorithms · ${text.length} chars in`, true);
+  checkHashVerify(results);
+}
+
+function checkHashVerify(results){
+  const algo = document.getElementById('hash-verify-algo').value;
+  const compare = document.getElementById('hash-verify').value.trim().toLowerCase();
+  if(!compare) { document.getElementById('hash-status').innerHTML=''; document.getElementById('hash-status').className='status-line'; return; }
+  if(compare === results[algo]) setStatus('hash-status', `Match — ${algo.toUpperCase()} digests are identical.`, true);
+  else setStatus('hash-status', `No match — ${algo.toUpperCase()} digests differ.`, false);
+}
+
+async function recomputeForVerify(){
+  const text = document.getElementById('hash-input').value;
+  const compare = document.getElementById('hash-verify').value.trim().toLowerCase();
+  if(!text || !compare) return;
+  const algo = document.getElementById('hash-verify-algo').value;
+  let digest;
+  if(algo === 'md5') digest = md5(text);
+  else digest = await webCryptoHex({sha1:'SHA-1',sha256:'SHA-256',sha384:'SHA-384',sha512:'SHA-512'}[algo], text);
+  if(compare === digest) setStatus('hash-status', `Match — ${algo.toUpperCase()} digests are identical.`, true);
+  else setStatus('hash-status', `No match — ${algo.toUpperCase()} digests differ.`, false);
+}
+document.getElementById('hash-verify').addEventListener('input', recomputeForVerify);
+document.getElementById('hash-verify-algo').addEventListener('change', recomputeForVerify);
+</script>
+</body>
+</html>
